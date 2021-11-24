@@ -1,9 +1,7 @@
-# phaser-week-1
-Phaser demo project week 1
+# Phaser-Sokoban
+Sokoban game made with Phaser engine
 ## Objective
-
-- Phaser scene with background, animating object, audio
-
+Recreate Sokoban game 
 ## Tools
 - HTML / CSS / JS
 - Phaser framework
