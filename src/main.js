@@ -1,5 +1,5 @@
 //Import các Scene cần dùng
-import Game from "./scenes/Game.js";
+import Game from "./Game.js";
 
 //Cài đặt các thông số cho Game của mình
 const config = {

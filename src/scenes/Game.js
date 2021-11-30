@@ -8,7 +8,6 @@ export default class Game extends Phaser.Scene {
     super('hello-world')
   }
 
-  //Nơi để load các assets trước khi chúng được sử dụng
   preload() {
     this.load.spritesheet('tiles', '../assets/sokoban_tilesheet@2.png', {
       frameWidth: 128,
@@ -16,7 +15,6 @@ export default class Game extends Phaser.Scene {
     })
   }
 
-  //Nơi để thêm ra các đối tượng như image, text,... cần có trong Scene này
   create() {
     const level = [
       [99, 99, 100, 100, 100, 99, 99, 99, 99],

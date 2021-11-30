@@ -12,7 +12,7 @@ const TargetGray = 77
 
 export {
     BoxOrange,
-    BoxRed, 
+    BoxRed,
     BoxBlue,
     BoxGreen,
     BoxGray,
