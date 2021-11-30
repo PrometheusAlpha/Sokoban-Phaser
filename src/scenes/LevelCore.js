@@ -4,21 +4,33 @@ let layer;
 let targetsCoveredByColor = {};
 let boxesByColor = {};
 
-import * as Colors from './consts/Color.js'
+import * as Colors from '../consts/Color.js'
 import {
   boxColorToTargetColor,
   targetColorToBoxColor
-} from './utils/ColorUtils.js'
+} from '../utils/ColorUtils.js'
 import {
   Direction
-} from './consts/Direction.js'
+} from '../consts/Direction.js'
 import {
   offsetForDirection
-} from './utils/TileUtils.js'
+} from '../utils/TileUtils.js'
 
-export default class Game extends Phaser.Scene {
+export default class LevelCore extends Phaser.Scene {
+  level;
   constructor() {
     super('hello-world');
+    this.level = [
+      [99, 99, 100, 100, 100, 99, 99, 99, 99],
+      [99, 99, 100, 51, 100, 99, 99, 99, 99],
+      [99, 99, 100, 0, 100, 100, 100, 100, 99],
+      [100, 100, 100, 8, 0, 7, 38, 100, 99],
+      [100, 25, 0, 6, 52, 0, 100, 100, 99],
+      [100, 100, 100, 100, 9, 100, 99, 99, 99],
+      [99, 99, 99, 100, 64, 100, 99, 99, 99],
+      [99, 99, 99, 100, 100, 100, 99, 99, 99],
+      [99, 99, 99, 99, 99, 99, 99, 99, 99],
+    ];
   }
 
   preload() {
@@ -31,20 +43,8 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
-    const level = [
-      [99, 99, 100, 100, 100, 99, 99, 99, 99],
-      [99, 99, 100, 51, 100, 99, 99, 99, 99],
-      [99, 99, 100, 0, 100, 100, 100, 100, 99],
-      [100, 100, 100, 8, 0, 7, 38, 100, 99],
-      [100, 25, 0, 6, 52, 0, 100, 100, 99],
-      [100, 100, 100, 100, 9, 100, 99, 99, 99],
-      [99, 99, 99, 100, 64, 100, 99, 99, 99],
-      [99, 99, 99, 100, 100, 100, 99, 99, 99],
-      [99, 99, 99, 99, 99, 99, 99, 99, 99],
-    ];
-
     const map = this.make.tilemap({
-      data: level,
+      data: this.level,
       tileWidth: 128,
       tileHeight: 128,
     });
@@ -209,7 +209,6 @@ export default class Game extends Phaser.Scene {
             }
 
             console.log(this.allTargetCovered());
-            console.log(targetsCoveredByColor);
           }
         }
       ))
@@ -277,7 +276,6 @@ export default class Game extends Phaser.Scene {
     if (!layer) return false
     const tile = layer.getTileAtWorldXY(x, y)
     if (!tile) return false
-    console.log(tile.index)
     return tile.index === tileIndex
   }
 

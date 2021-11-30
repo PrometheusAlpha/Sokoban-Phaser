@@ -1,4 +1,3 @@
-//Import các Scene cần dùng
 import Game from "./scenes/Game.js";
 import Game2 from "./scenes/Game2.js";
 import Game3 from "./scenes/Game3.js";
@@ -10,19 +9,19 @@ import Game8 from "./scenes/Game8.js";
 import Game9 from "./scenes/Game9.js";
 import Game10 from "./scenes/Game10.js";
 
-//Cài đặt các thông số cho Game của mình
 const config = {
-    type: Phaser.AUTO,
-    width: 1152,
-    height: 1152,
-    physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { y: 200}
-        }
-    },
-    scene: [Game10]
+  type: Phaser.AUTO,
+  width: 1152,
+  height: 1152,
+  physics: {
+    default: 'arcade',
+    arcade: {
+      gravity: {
+        y: 200
+      }
+    }
+  },
+  scene: [Game3]
 };
 
-//Khởi tạo game và runnnnnnnnnnnnn
 var game = new Phaser.Game(config);
