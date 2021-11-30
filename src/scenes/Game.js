@@ -6,7 +6,9 @@ import {
 class Game extends LevelCore {
   // level;
   constructor() {
-    super();
+    super({
+      key: "level1"
+    });
     this.level = LevelMap['level1'];
   }
 
@@ -20,6 +22,10 @@ class Game extends LevelCore {
 
   update() {
     super.update();
+    if (this.allTargetCovered()) {
+      this.scene.start('Game2');
+      console.log('all target covered');
+    }
   }
 }
 

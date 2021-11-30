@@ -6,7 +6,7 @@ import {
 class Game extends LevelCore {
   // level;
   constructor() {
-    super();
+    super("level4");
     this.level = LevelMap['level4'];
   }
 

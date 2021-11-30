@@ -1,38 +1,41 @@
-import {Direction} from '../consts/Direction.js'
+import {
+  Direction
+} from '../consts/Direction.js'
 
 const offsetForDirection = (direction) => {
-    switch (direction)
-    {
-        case Direction['Left']:
-            return {
-                x: -64,
-                y: 64
-            }
+  switch (direction) {
+    case Direction['Left']:
+      return {
+        x: -64,
+          y: 64
+      }
 
-        case Direction['Right']:
-            return {
-                x: 64+128,
-                y: 64
-            }
+      case Direction['Right']:
+        return {
+          x: 64 + 128,
+            y: 64
+        }
 
         case Direction['Up']:
+          return {
+            x: 64,
+              y: -64
+          }
+
+          case Direction['Down']:
             return {
-                x: 64,
-                y: -64
+              x: 64,
+                y: 64 + 128
             }
 
-        case Direction['Down']:
-            return {
-                x: 64,
-                y: 64+128
-            }
-
-        default:
-            return {
+            default:
+              return {
                 x: 0,
-                y: 0
-            }
-    }
+                  y: 0
+              }
+  }
 }
 
-export { offsetForDirection }
+export {
+  offsetForDirection
+}

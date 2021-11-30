@@ -1,7 +1,7 @@
 let player;
 let cursors;
 let layer;
-let targetsCoveredByColor = {};
+let NoOfTargetsCoveredGroupByColor = {};
 let boxesByColor = {};
 
 import * as Colors from '../consts/Color.js'
@@ -18,19 +18,9 @@ import {
 
 export default class LevelCore extends Phaser.Scene {
   level;
-  constructor() {
-    super('hello-world');
-    this.level = [
-      [99, 99, 100, 100, 100, 99, 99, 99, 99],
-      [99, 99, 100, 51, 100, 99, 99, 99, 99],
-      [99, 99, 100, 0, 100, 100, 100, 100, 99],
-      [100, 100, 100, 8, 0, 7, 38, 100, 99],
-      [100, 25, 0, 6, 52, 0, 100, 100, 99],
-      [100, 100, 100, 100, 9, 100, 99, 99, 99],
-      [99, 99, 99, 100, 64, 100, 99, 99, 99],
-      [99, 99, 99, 100, 100, 100, 99, 99, 99],
-      [99, 99, 99, 99, 99, 99, 99, 99, 99],
-    ];
+
+  constructor(key) {
+    super(key);
   }
 
   preload() {
@@ -59,7 +49,6 @@ export default class LevelCore extends Phaser.Scene {
     player.setOrigin(0);
 
     this.createPlayerAnims();
-
     this.extractBoxes(layer)
   }
 
@@ -113,9 +102,7 @@ export default class LevelCore extends Phaser.Scene {
   }
 
   allTargetCovered() {
-    const targetColors = Object.keys(targetsCoveredByColor)
-    // console.log(targetColors)
-    // console.log(targetsCoveredByColor)
+    const targetColors = Object.keys(NoOfTargetsCoveredGroupByColor)
     for (let i = 0; i < targetColors.length; ++i) {
       const targetColor = parseInt(targetColors[i]);
       const boxColor = targetColorToBoxColor(targetColor);
@@ -124,9 +111,7 @@ export default class LevelCore extends Phaser.Scene {
       }
 
       const numBoxes = boxesByColor[boxColor].length
-      const numCovered = targetsCoveredByColor[targetColor]
-      // console.log(`${boxColor} ${numBoxes} ${numCovered}`)
-      // console.log(boxesByColor[boxColor])
+      const numCovered = NoOfTargetsCoveredGroupByColor[targetColor]
 
       if (numCovered !== numBoxes) {
         return false;
@@ -151,9 +136,45 @@ export default class LevelCore extends Phaser.Scene {
       }).map(box => box.setOrigin(0))
 
       const targetColor = boxColorToTargetColor(color);
-      targetsCoveredByColor[targetColor] = 0
+      NoOfTargetsCoveredGroupByColor[targetColor] = 0
     })
 
+  }
+
+  pushBox(nextOffset, boxData, baseTween) {
+    const nx = nextOffset.x
+    const ny = nextOffset.y
+
+    const box = boxData.box
+
+    const nextBoxData = this.getBoxDataAt(box.x + nx, box.y + ny)
+    const isNextTileAWall = this.hasWallAt(box.x + nx, box.y + ny)
+
+    if (nextBoxData || isNextTileAWall) {
+      return;
+    }
+
+    const boxColor = boxData.color
+    const targetColor = boxColorToTargetColor(boxColor)
+
+    const coveredTarget = this.hasTargetAt(box.x, box.y, targetColor)
+    if (coveredTarget) {
+      this.changeNoOfTargetCoveredGroupByColor(targetColor, -1)
+    }
+
+    this.tweens.add(Object.assign(
+      baseTween, {
+        targets: box,
+        onComplete: () => {
+          const coveredTarget = this.hasTargetAt(box.x, box.y, targetColor);
+          if (coveredTarget) {
+            this.changeNoOfTargetCoveredGroupByColor(targetColor, 1);
+          }
+
+          console.log(this.allTargetCovered());
+        }
+      }
+    ))
   }
 
   // make player move and move the box as well
@@ -179,40 +200,9 @@ export default class LevelCore extends Phaser.Scene {
 
     const boxData = this.getBoxDataAt(ox, oy)
     if (boxData) {
-      const nx = nextOffset.x
-      const ny = nextOffset.y
-
-      const box = boxData.box
-
-      const nextBoxData = this.getBoxDataAt(box.x + nx, box.y + ny)
-      const nextWallData = this.hasWallAt(box.x + nx, box.y + ny)
-
-      if (nextBoxData || nextWallData) {
-        return;
-      }
-
-      const boxColor = boxData.color
-      const targetColor = boxColorToTargetColor(boxColor)
-
-      const coveredTarget = this.hasTargetAt(box.x, box.y, targetColor)
-      if (coveredTarget) {
-        this.changeTargetCoveredCountForCount(targetColor, -1)
-      }
-
-      this.tweens.add(Object.assign(
-        baseTween, {
-          targets: box,
-          onComplete: () => {
-            const coveredTarget = this.hasTargetAt(box.x, box.y, targetColor);
-            if (coveredTarget) {
-              this.changeTargetCoveredCountForCount(targetColor, 1);
-            }
-
-            console.log(this.allTargetCovered());
-          }
-        }
-      ))
+      this.pushBox(nextOffset, boxData, baseTween);
     }
+
     this.tweens.add(Object.assign(
       baseTween, {
         targets: player,
@@ -234,13 +224,12 @@ export default class LevelCore extends Phaser.Scene {
     }
   }
 
-
-  changeTargetCoveredCountForCount(color, change) {
-    if (!(color in targetsCoveredByColor)) {
-      targetsCoveredByColor[color] = 0
+  changeNoOfTargetCoveredGroupByColor(color, change) {
+    if (!(color in NoOfTargetsCoveredGroupByColor)) {
+      NoOfTargetsCoveredGroupByColor[color] = 0
     }
 
-    targetsCoveredByColor[color] += change
+    NoOfTargetsCoveredGroupByColor[color] += change
   }
 
   // check if the box is in position (x, y)
@@ -249,8 +238,7 @@ export default class LevelCore extends Phaser.Scene {
     for (let i = 0; i < keys.length; ++i) {
       const color = keys[i]
       const box = boxesByColor[color].find(box => {
-        const rect = box.getBounds()
-        return rect.contains(x, y)
+        return box.getBounds().contains(x, y)
       })
 
       if (!box) continue
