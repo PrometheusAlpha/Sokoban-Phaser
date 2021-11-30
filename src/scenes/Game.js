@@ -1,6 +1,7 @@
-var player;
-var cursors;
-var layer;
+let player;
+let cursors;
+let boxes;
+
 export default class Game extends Phaser.Scene {
 
   constructor() {
