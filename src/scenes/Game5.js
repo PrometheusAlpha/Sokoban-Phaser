@@ -1,11 +1,11 @@
 var player;
 var cursors;
 var layer;
-export default class Game extends Phaser.Scene{
+export default class Game5 extends Phaser.Scene{
   
     constructor(){
         super({
-            key: "Game"
+            key: "Game5"
         })
     }
     
@@ -19,18 +19,15 @@ export default class Game extends Phaser.Scene{
     //Nơi để thêm ra các đối tượng như image, text,... cần có trong Scene này
     create(){
          const level = [
-           
-             
-            
-            [99,   99,  100, 100, 100,  99,  99,  99,  99],
-            [99,   99,  100,  51, 100,  99,  99,  99,  99],
-            [99,   99,  100,   0, 100, 100, 100, 100,  99],
-            [100, 100,  100,   8,   0,   8,  51, 100,  99],
-            [100,  51,    0,  51,   0, 100, 100, 100,  99],
-            [100, 100,  100, 100,   8, 100,  99,  99,  99],
-            [99,   99,   99, 100,  51, 100,  99,  99,  99],
-            [99,   99,   99, 100, 100, 100,  99,  99,  99],
-            [99,   99,   99,  99,  99,  99,  99,  99,  99]
+            [  99,  99, 100, 100, 100, 100, 100, 100,  99],
+            [  99,  99, 100,   0,   0,   0,   0, 100,  99],
+            [ 100, 100, 100,   8,   8,   8,   0, 100,  99],
+            [ 100,   0,   0,   8,  51,  51,   0, 100,  99],
+            [ 100,   0,   8,  51,  51,  51, 100, 100,  99],
+            [ 100, 100, 100, 100,   0,   0, 100,  99,  99],
+            [  99,  99,  99, 100, 100, 100, 100,  99,  99],
+            [  99,  99,  99,  99,  99,  99,  99,  99,  99],
+            [  99,  99,  99,  99,  99,  99,  99,  99,  99]
          ]
 
          const map = this.make.tilemap({
@@ -42,7 +39,7 @@ export default class Game extends Phaser.Scene{
          const tiles = map.addTilesetImage('tiles')
          const layer = map.createStaticLayer(0, tiles, 0, 0)
 
-        player = this.add.sprite(576,576, 'tiles', 52);
+        player = this.add.sprite(192,448, 'tiles', 52);
 
         this.anims.create({
             key: 'idle',
