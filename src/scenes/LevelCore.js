@@ -18,9 +18,14 @@ import {
 
 export default class LevelCore extends Phaser.Scene {
   level;
+  nextLevel;
 
-  constructor(key) {
-    super(key);
+  constructor(key, levelMap, nextLevel) {
+    super({
+      key: key
+    });
+    this.level = levelMap;
+    this.nextLevel = nextLevel;
   }
 
   preload() {
@@ -99,6 +104,10 @@ export default class LevelCore extends Phaser.Scene {
         player.anims.play('down', true);
       })
     }
+
+    if (this.allTargetCovered()) {
+      this.scene.start(this.nextLevel)
+    }
   }
 
   allTargetCovered() {
@@ -141,42 +150,6 @@ export default class LevelCore extends Phaser.Scene {
 
   }
 
-  pushBox(nextOffset, boxData, baseTween) {
-    const nx = nextOffset.x
-    const ny = nextOffset.y
-
-    const box = boxData.box
-
-    const nextBoxData = this.getBoxDataAt(box.x + nx, box.y + ny)
-    const isNextTileAWall = this.hasWallAt(box.x + nx, box.y + ny)
-
-    if (nextBoxData || isNextTileAWall) {
-      return;
-    }
-
-    const boxColor = boxData.color
-    const targetColor = boxColorToTargetColor(boxColor)
-
-    const coveredTarget = this.hasTargetAt(box.x, box.y, targetColor)
-    if (coveredTarget) {
-      this.changeNoOfTargetCoveredGroupByColor(targetColor, -1)
-    }
-
-    this.tweens.add(Object.assign(
-      baseTween, {
-        targets: box,
-        onComplete: () => {
-          const coveredTarget = this.hasTargetAt(box.x, box.y, targetColor);
-          if (coveredTarget) {
-            this.changeNoOfTargetCoveredGroupByColor(targetColor, 1);
-          }
-
-          console.log(this.allTargetCovered());
-        }
-      }
-    ))
-  }
-
   // make player move and move the box as well
   tweenMove(direction, baseTween, onStart) {
     if (this.tweens.isTweening(player)) {
@@ -200,7 +173,40 @@ export default class LevelCore extends Phaser.Scene {
 
     const boxData = this.getBoxDataAt(ox, oy)
     if (boxData) {
-      this.pushBox(nextOffset, boxData, baseTween);
+      const nx = nextOffset.x
+      const ny = nextOffset.y
+
+      const box = boxData.box
+
+      const nextBoxData = this.getBoxDataAt(box.x + nx, box.y + ny)
+      const isNextTileAWall = this.hasWallAt(box.x + nx, box.y + ny)
+      // console.log(nextBoxData)
+
+      if (isNextTileAWall || nextBoxData) {
+        console.log(isNextTileAWall)
+        return;
+      }
+
+      const boxColor = boxData.color
+      const targetColor = boxColorToTargetColor(boxColor)
+
+      const coveredTarget = this.hasTargetAt(box.x, box.y, targetColor)
+      if (coveredTarget) {
+        this.changeNoOfTargetCoveredGroupByColor(targetColor, -1)
+      }
+
+      this.tweens.add(Object.assign(
+        baseTween, {
+          targets: box,
+          onComplete: () => {
+            const coveredTarget = this.hasTargetAt(box.x, box.y, targetColor);
+            if (coveredTarget) {
+              this.changeNoOfTargetCoveredGroupByColor(targetColor, 1);
+            }
+            // console.log(this.allTargetCovered());
+          }
+        }
+      ))
     }
 
     this.tweens.add(Object.assign(
