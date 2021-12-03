@@ -2,13 +2,17 @@ import LevelCore from "./scenes/LevelCore.js";
 import {
   LevelMap
 } from "./consts/LevelMap.js";
+import Start from "./scenes/Start.js";
+import Narration from "./scenes/Narration.js";
+import Help from "./scenes/Help.js";
 
 const levelKeysArr = Object.keys(LevelMap);
-const levelArr = [];
+const levelArr = [Start, Narration, Help];
 
 for (let i = 0; i < levelKeysArr.length; i++) {
   levelArr.push(new LevelCore(levelKeysArr[i], LevelMap[levelKeysArr[i]], levelKeysArr[(i + 1) % levelKeysArr.length]));
 }
+
 
 const config = {
   type: Phaser.AUTO,
