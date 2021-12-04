@@ -32,8 +32,8 @@ export default class LevelCore extends Phaser.Scene {
   }
 
   init() {
-		movesCount = 0;
-	}
+    movesCount = 0;
+  }
 
   preload() {
     this.load.spritesheet('tiles', '../assets/Sokoban.png', {
@@ -64,18 +64,18 @@ export default class LevelCore extends Phaser.Scene {
     this.extractBoxes(layer);
 
     movesCountLabel = this.add.text(32, 32, `Moves: ${movesCount}`, {
-			fontSize: '3rem',
-			fontStyle: 'bold',
-			fontFamily: 'serif',
-		});
+      fontSize: '3rem',
+      fontStyle: 'bold',
+      fontFamily: 'serif',
+    });
 
     let start = this.add
-      .text(1000, 1100, 'Reset game', {
+      .text(950, 1100, 'Reset game', {
         fontFamily: 'Lora, serif',
-		    fontStyle: 'bold'
+        fontStyle: 'bold'
       }, 2, 1, 0)
       .setFontSize(30)
-	  .setColor('red')
+      .setColor('red')
       .setInteractive()
       .once('pointerdown', this.startGame, this);
   }
@@ -93,7 +93,7 @@ export default class LevelCore extends Phaser.Scene {
     if (justLeft) {
       const baseTween = {
         x: '-= 128',
-        duration: 50
+        duration: 250
       }
 
       this.tweenMove(Direction['Left'], baseTween, () => {
@@ -102,7 +102,7 @@ export default class LevelCore extends Phaser.Scene {
     } else if (justRight) {
       const baseTween = {
         x: '+= 128',
-        duration: 50
+        duration: 250
       }
 
       this.tweenMove(Direction['Right'], baseTween, () => {
@@ -111,7 +111,7 @@ export default class LevelCore extends Phaser.Scene {
     } else if (justUp) {
       const baseTween = {
         y: '-= 128',
-        duration: 50
+        duration: 250
       }
 
       this.tweenMove(Direction['Up'], baseTween, () => {
@@ -120,7 +120,7 @@ export default class LevelCore extends Phaser.Scene {
     } else if (justDown) {
       const baseTween = {
         y: '+= 128',
-        duration: 50
+        duration: 250
       }
 
       this.tweenMove(Direction['Down'], baseTween, () => {
@@ -242,17 +242,17 @@ export default class LevelCore extends Phaser.Scene {
   }
 
   handlePlayerStopped() {
-		movesCount++,
-		this.stopPlayerAnimation(),
-		this.updateMovesCount();
-	}
+    movesCount++,
+    this.stopPlayerAnimation(),
+      this.updateMovesCount();
+  }
 
   updateMovesCount() {
-		if (!movesCountLabel) {
-			return;
-		}
-		movesCountLabel.text = `Moves: ${movesCount}`;
-	}
+    if (!movesCountLabel) {
+      return;
+    }
+    movesCountLabel.text = `Moves: ${movesCount}`;
+  }
 
   // used when player finishes moving
   stopPlayerAnimation() {
@@ -383,8 +383,8 @@ export default class LevelCore extends Phaser.Scene {
   }
 
   startGame() {
-		this.registry.destroy(); // destroy registry
-		this.events.off(); // disable all active events
-		this.scene.restart(); // restart current scene
-	}
+    this.registry.destroy(); // destroy registry
+    this.events.off(); // disable all active events
+    this.scene.restart(); // restart current scene
+  }
 }
