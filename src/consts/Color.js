@@ -1,8 +1,8 @@
-const BoxOrange = 6
-const BoxRed = 7
-const BoxBlue = 8
-const BoxGreen = 9
-const BoxGray = 10
+const BoxOrange = 1
+const BoxRed = 2
+const BoxBlue = 3
+const BoxGreen = 4
+const BoxGray = 5
 
 const TargetOrange = 25
 const TargetRed = 38
