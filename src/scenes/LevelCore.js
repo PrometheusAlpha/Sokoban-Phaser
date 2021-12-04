@@ -36,7 +36,7 @@ export default class LevelCore extends Phaser.Scene {
   }
 
   preload() {
-    this.load.spritesheet('tiles', '../assets/Sokoban.png', {
+    this.load.spritesheet('tiles', 'assets/Sokoban.png', {
       frameWidth: 128,
       startFrame: 0,
     });
