@@ -4,6 +4,9 @@ let layer;
 let NoOfTargetsCoveredGroupByColor = {};
 let boxesByColor = {};
 
+let movesCount;
+let movesCountLabel;
+
 import * as Colors from '../consts/Color.js'
 import {
   boxColorToTargetColor,
@@ -27,6 +30,10 @@ export default class LevelCore extends Phaser.Scene {
     this.level = levelMap;
     this.nextLevel = nextLevel;
   }
+
+  init() {
+		movesCount = 0;
+	}
 
   preload() {
     this.load.spritesheet('tiles', '../assets/Sokoban.png', {
@@ -54,7 +61,23 @@ export default class LevelCore extends Phaser.Scene {
     player.setOrigin(0);
 
     this.createPlayerAnims();
-    this.extractBoxes(layer)
+    this.extractBoxes(layer);
+
+    movesCountLabel = this.add.text(32, 32, `Moves: ${movesCount}`, {
+			fontSize: '3rem',
+			fontStyle: 'bold',
+			fontFamily: 'serif',
+		});
+
+    let start = this.add
+      .text(1000, 1100, 'Reset game', {
+        fontFamily: 'Lora, serif',
+		    fontStyle: 'bold'
+      }, 2, 1, 0)
+      .setFontSize(30)
+	  .setColor('red')
+      .setInteractive()
+      .once('pointerdown', this.startGame, this);
   }
 
   update() {
@@ -203,7 +226,6 @@ export default class LevelCore extends Phaser.Scene {
             if (coveredTarget) {
               this.changeNoOfTargetCoveredGroupByColor(targetColor, 1);
             }
-            // console.log(this.allTargetCovered());
           }
         }
       ))
@@ -212,12 +234,25 @@ export default class LevelCore extends Phaser.Scene {
     this.tweens.add(Object.assign(
       baseTween, {
         targets: player,
-        onComplete: this.stopPlayerAnimation,
+        onComplete: this.handlePlayerStopped,
         onCompleteScope: this,
         onStart
       }
     ))
   }
+
+  handlePlayerStopped() {
+		movesCount++,
+		this.stopPlayerAnimation(),
+		this.updateMovesCount();
+	}
+
+  updateMovesCount() {
+		if (!movesCountLabel) {
+			return;
+		}
+		movesCountLabel.text = `Moves: ${movesCount}`;
+	}
 
   // used when player finishes moving
   stopPlayerAnimation() {
@@ -346,4 +381,10 @@ export default class LevelCore extends Phaser.Scene {
       repeat: -1,
     });
   }
+
+  startGame() {
+		this.registry.destroy(); // destroy registry
+		this.events.off(); // disable all active events
+		this.scene.restart(); // restart current scene
+	}
 }
