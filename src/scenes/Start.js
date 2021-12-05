@@ -23,6 +23,8 @@ export default class Start extends Phaser.Scene {
       .setFontSize(100)
       .setInteractive()
       .once('pointerdown', this.openHelp, this);
+    this.registry.set('time', 0);
+    this.registry.set('level', "");
   }
 
   update() {}

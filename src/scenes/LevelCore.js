@@ -6,6 +6,7 @@ let boxesByColor = {};
 
 let movesCount;
 let movesCountLabel;
+let start, end;
 
 import * as Colors from '../consts/Color.js'
 import {
@@ -20,19 +21,19 @@ import {
 } from '../utils/TileUtils.js'
 
 export default class LevelCore extends Phaser.Scene {
-  level;
-  nextLevel;
-
   constructor(key, levelMap, nextLevel) {
     super({
       key: key
     });
+    this.key = key;
     this.level = levelMap;
     this.nextLevel = nextLevel;
   }
 
   init() {
     movesCount = 0;
+    start = 0;
+    end = 0;
   }
 
   preload() {
@@ -69,15 +70,24 @@ export default class LevelCore extends Phaser.Scene {
       fontFamily: 'serif',
     });
 
-    let start = this.add
-      .text(950, 1100, 'Reset game', {
+    let restartLevel = this.add
+      .text(950, 1100, 'Reset level', {
         fontFamily: 'Lora, serif',
         fontStyle: 'bold'
       }, 2, 1, 0)
       .setFontSize(30)
       .setColor('red')
       .setInteractive()
-      .once('pointerdown', this.startGame, this);
+      .once('pointerdown', this.restartLevel, this);
+    let endGame = this.add
+      .text(750, 1100, 'End game', {
+        fontFamily: 'Lora, serif',
+        fontStyle: 'bold'
+      }, 2, 1, 0)
+      .setFontSize(30)
+      .setColor('red')
+      .setInteractive()
+      .once('pointerdown', this.loseGame, this);
   }
 
   update() {
@@ -128,9 +138,18 @@ export default class LevelCore extends Phaser.Scene {
       })
     }
 
+    if (movesCount == 1) {
+      start = Date.now() / 1000;
+    }
     if (this.allTargetCovered()) {
       this.scene.start(this.nextLevel)
     }
+    if (this.allTargetCovered()) {
+      end = Date.now() / 1000;
+      this.registry.set('time', this.registry.get('time') + end - start);
+      console.log(this.registry.get('time'));
+    }
+
   }
 
   allTargetCovered() {
@@ -382,9 +401,23 @@ export default class LevelCore extends Phaser.Scene {
     });
   }
 
-  startGame() {
-    this.registry.destroy(); // destroy registry
-    this.events.off(); // disable all active events
-    this.scene.restart(); // restart current scene
+  restartLevel() {
+    end = Date.now() / 1000;
+    this.registry.set('time', this.registry.get('time') + end - start + 5);
+    this.events.off();
+    this.scene.restart();
+  }
+
+  loseGame() {
+    if (movesCount === 0) {
+      this.registry.set('level', this.key);
+      this.scene.start('EndScene');
+    } else {
+      end = Date.now() / 1000;
+      this.registry.set('time', this.registry.get('time') + end - start);
+      this.registry.set('level', this.key);
+      this.events.off();
+      this.scene.start('EndScene');
+    }
   }
 }

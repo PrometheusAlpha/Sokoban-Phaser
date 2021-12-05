@@ -3,6 +3,7 @@ import {
   LevelMap
 } from "./consts/LevelMap.js";
 import Start from "./scenes/Start.js";
+import EndScene from "./scenes/EndScene.js";
 import Narration from "./scenes/Narration.js";
 import Help from "./scenes/Help.js";
 import {
@@ -10,7 +11,7 @@ import {
 } from "./consts/LevelMap.js";
 
 const levelKeysArr = Object.keys(LevelMap);
-const levelArr = [Start, Narration, Help];
+const levelArr = [Start, Narration, Help, EndScene];
 
 for (let i = 0; i < levelKeysArr.length; i++) {
   levelArr.push(new LevelCore(levelKeysArr[i], convertToNumber(LevelMap[levelKeysArr[i]]), levelKeysArr[(i + 1) % levelKeysArr.length]));

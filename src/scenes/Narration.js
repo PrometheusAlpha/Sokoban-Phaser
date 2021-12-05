@@ -18,7 +18,6 @@ export default class Narration extends Phaser.Scene {
         fontFamily: 'Lora, serif'
       }, 0).setWordWrapWidth(900)
       .setFontSize(30)
-    console.log(this.startNarration.length);
   }
 
 
