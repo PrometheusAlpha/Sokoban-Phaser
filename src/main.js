@@ -9,14 +9,15 @@ import Help from "./scenes/Help.js";
 import {
   convertToNumber
 } from "./consts/LevelMap.js";
+import NameInput from "./scenes/NameInput.js";
 
 const levelKeysArr = Object.keys(LevelMap);
-const levelArr = [Start, Narration, Help, EndScene];
+const levelArr = [Start, Narration, NameInput, Help];
 
 for (let i = 0; i < levelKeysArr.length; i++) {
   levelArr.push(new LevelCore(levelKeysArr[i], convertToNumber(LevelMap[levelKeysArr[i]]), levelKeysArr[(i + 1) % levelKeysArr.length]));
 }
-
+levelArr.push(EndScene);
 
 const config = {
   type: Phaser.AUTO,
@@ -29,6 +30,9 @@ const config = {
         y: 200
       }
     }
+  },
+  dom: {
+    createContainer: true
   },
   scene: levelArr
 };

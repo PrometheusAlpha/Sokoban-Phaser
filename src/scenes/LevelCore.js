@@ -416,7 +416,25 @@ export default class LevelCore extends Phaser.Scene {
       end = Date.now() / 1000;
       this.registry.set('time', this.registry.get('time') + end - start);
       this.registry.set('level', this.key);
-      this.events.off();
+      let time = this.registry.get('time');
+      let level = this.registry.get('level');
+      let name = this.registry.get('name');
+      let data = JSON.parse(localStorage.getItem('turns')) || [];
+      if (data === []) {
+        data = [{
+          name: name,
+          time: time,
+          level: level
+        }];
+      } else {
+        data.push({
+          name: name,
+          time: time,
+          level: level
+        });
+      }
+      localStorage.setItem('turns', JSON.stringify(data));
+      console.log(data);
       this.scene.start('EndScene');
     }
   }

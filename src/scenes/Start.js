@@ -30,7 +30,7 @@ export default class Start extends Phaser.Scene {
   update() {}
 
   startGame() {
-    this.scene.start('Narration');
+    this.scene.start('NameInput');
   }
   openHelp() {
     this.scene.start('Help');
