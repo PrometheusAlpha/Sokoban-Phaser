@@ -70,7 +70,7 @@ export default class LevelCore extends Phaser.Scene {
       fontFamily: 'serif',
     });
 
-    let restartLevel = this.add
+    let restartLevelText = this.add
       .text(950, 1100, 'Reset level', {
         fontFamily: 'Lora, serif',
         fontStyle: 'bold'
@@ -79,7 +79,7 @@ export default class LevelCore extends Phaser.Scene {
       .setColor('red')
       .setInteractive()
       .once('pointerdown', this.restartLevel, this);
-    let endGame = this.add
+    let endGameText = this.add
       .text(750, 1100, 'End game', {
         fontFamily: 'Lora, serif',
         fontStyle: 'bold'
@@ -87,7 +87,7 @@ export default class LevelCore extends Phaser.Scene {
       .setFontSize(30)
       .setColor('red')
       .setInteractive()
-      .once('pointerdown', this.loseGame, this);
+      .once('pointerdown', this.endGame, this);
   }
 
   update() {
@@ -143,13 +143,13 @@ export default class LevelCore extends Phaser.Scene {
     }
     if (this.allTargetCovered()) {
       this.scene.start(this.nextLevel)
-    }
-    if (this.allTargetCovered()) {
       end = Date.now() / 1000;
       this.registry.set('time', this.registry.get('time') + end - start);
       console.log(this.registry.get('time'));
+      if (key === 'Level10') {
+        this.endGame();
+      }
     }
-
   }
 
   allTargetCovered() {
@@ -408,7 +408,7 @@ export default class LevelCore extends Phaser.Scene {
     this.scene.restart();
   }
 
-  loseGame() {
+  endGame() {
     if (movesCount === 0) {
       this.registry.set('level', this.key);
       this.scene.start('EndScene');

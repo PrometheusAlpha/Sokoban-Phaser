@@ -13,9 +13,10 @@ import NameInput from "./scenes/NameInput.js";
 
 const levelKeysArr = Object.keys(LevelMap);
 const levelArr = [Start, Narration, NameInput, Help];
+const length = levelKeysArr.length;
 
-for (let i = 0; i < levelKeysArr.length; i++) {
-  levelArr.push(new LevelCore(levelKeysArr[i], convertToNumber(LevelMap[levelKeysArr[i]]), levelKeysArr[(i + 1) % levelKeysArr.length]));
+for (let i = 0; i < length; i++) {
+  levelArr.push(new LevelCore(levelKeysArr[i], convertToNumber(LevelMap[levelKeysArr[i]]), levelKeysArr[(i + 1) % length]));
 }
 levelArr.push(EndScene);
 
@@ -30,9 +31,6 @@ const config = {
         y: 200
       }
     }
-  },
-  dom: {
-    createContainer: true
   },
   scene: levelArr
 };
