@@ -4,9 +4,7 @@ export default class NameInput extends Phaser.Scene {
       key: 'NameInput'
     });
   }
-  preload() {
-    this.load.html('nameform', 'assets/html/input.html');
-  }
+  preload() {}
 
   create() {
     this.cameras.main.setBackgroundColor('#808080');

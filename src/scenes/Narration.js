@@ -24,7 +24,7 @@ export default class Narration extends Phaser.Scene {
 
     this.startNarration = this.add
       .text(100, 652, "", {
-        fontFamily: 'Lora, serif'
+        fontFamily: 'GoogleSans, serif'
       }, 0).setWordWrapWidth(900)
       .setFontSize(30)
   }
@@ -37,7 +37,6 @@ export default class Narration extends Phaser.Scene {
 
     if (this.count === narration[this.i].length) {
       setTimeout(() => {
-        console.log(this.i);
         this.i++;
         this.startNarration.setText("");
         this.count = 0;

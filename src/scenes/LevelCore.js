@@ -67,12 +67,12 @@ export default class LevelCore extends Phaser.Scene {
     movesCountLabel = this.add.text(32, 32, `Moves: ${movesCount}`, {
       fontSize: '3rem',
       fontStyle: 'bold',
-      fontFamily: 'serif',
+      fontFamily: 'GoogleSans',
     });
 
     let restartLevelText = this.add
       .text(950, 1100, 'Reset level', {
-        fontFamily: 'Lora, serif',
+        fontFamily: 'GoogleSans, serif',
         fontStyle: 'bold'
       }, 2, 1, 0)
       .setFontSize(30)
@@ -81,7 +81,7 @@ export default class LevelCore extends Phaser.Scene {
       .once('pointerdown', this.restartLevel, this);
     let endGameText = this.add
       .text(750, 1100, 'End game', {
-        fontFamily: 'Lora, serif',
+        fontFamily: 'GoogleSans, serif',
         fontStyle: 'bold'
       }, 2, 1, 0)
       .setFontSize(30)
@@ -145,8 +145,7 @@ export default class LevelCore extends Phaser.Scene {
       this.scene.start(this.nextLevel)
       end = Date.now() / 1000;
       this.registry.set('time', this.registry.get('time') + end - start);
-      console.log(this.registry.get('time'));
-      if (key === 'Level10') {
+      if (this.key === 'Level10') {
         this.endGame();
       }
     }
@@ -208,7 +207,6 @@ export default class LevelCore extends Phaser.Scene {
 
     if (hasWall) {
       const key = player.anims.currentAnim.key
-      console.log(key)
       player.anims.play(`${key}`, true);
       return
     }
@@ -222,10 +220,8 @@ export default class LevelCore extends Phaser.Scene {
 
       const nextBoxData = this.getBoxDataAt(box.x + nx, box.y + ny)
       const isNextTileAWall = this.hasWallAt(box.x + nx, box.y + ny)
-      // console.log(nextBoxData)
 
       if (isNextTileAWall || nextBoxData) {
-        console.log(isNextTileAWall)
         return;
       }
 
@@ -434,7 +430,6 @@ export default class LevelCore extends Phaser.Scene {
         });
       }
       localStorage.setItem('turns', JSON.stringify(data));
-      console.log(data);
       this.scene.start('EndScene');
     }
   }

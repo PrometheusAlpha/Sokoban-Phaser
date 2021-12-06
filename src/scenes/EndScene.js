@@ -7,7 +7,6 @@ export default class EndScene extends Phaser.Scene {
   preload() {}
   create() {
     let data = JSON.parse(localStorage.getItem('turns'));
-    console.log(data);
     for (let i = 0; i < data.length; i++) {
       this.add.text(
         400,
