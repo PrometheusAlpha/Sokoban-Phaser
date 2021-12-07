@@ -24,7 +24,7 @@ export default class Narration extends Phaser.Scene {
 
     this.startNarration = this.add
       .text(100, 652, "", {
-        fontFamily: 'GoogleSans, serif'
+        fontFamily: 'GoogleSans, sans-serif'
       }, 0).setWordWrapWidth(900)
       .setFontSize(30)
   }
@@ -43,7 +43,7 @@ export default class Narration extends Phaser.Scene {
         if (this.i === narration.length) {
           this.scene.start('level1');
         }
-      }, Math.max(this.count * 8, 2000));
+      }, Math.max(this.count * 7, 2000));
     }
   }
 }
