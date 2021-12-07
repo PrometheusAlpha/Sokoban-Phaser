@@ -1,25 +1,22 @@
 import LevelCore from "./scenes/LevelCore.js";
-import {
-  LevelMap
-} from "./consts/LevelMap.js";
 import Start from "./scenes/Start.js";
 import EndScene from "./scenes/EndScene.js";
 import Narration from "./scenes/Narration.js";
 import Help from "./scenes/Help.js";
+import NameInput from "./scenes/NameInput.js";
 import {
+  LevelMap,
   convertToNumber
 } from "./consts/LevelMap.js";
-import NameInput from "./scenes/NameInput.js";
 
 const levelKeysArr = Object.keys(LevelMap);
-const levelArr = [Start, Narration, NameInput, Help];
+const scenes = [Start, Narration, NameInput, Help, EndScene];
 const length = levelKeysArr.length;
+localStorage.setItem("turns", "[]");
 
 for (let i = 0; i < length; i++) {
-  levelArr.push(new LevelCore(levelKeysArr[i], convertToNumber(LevelMap[levelKeysArr[i]]), levelKeysArr[(i + 1) % length]));
+  scenes.push(new LevelCore(levelKeysArr[i], convertToNumber(LevelMap[levelKeysArr[i]]), levelKeysArr[(i + 1) % length]));
 }
-levelArr.push(EndScene);
-localStorage.setItem("turns", "[]");
 
 const config = {
   type: Phaser.AUTO,
@@ -33,7 +30,7 @@ const config = {
       }
     }
   },
-  scene: levelArr
+  scene: scenes
 };
 
 let game = new Phaser.Game(config);
