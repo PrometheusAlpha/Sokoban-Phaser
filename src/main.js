@@ -19,6 +19,7 @@ for (let i = 0; i < length; i++) {
   levelArr.push(new LevelCore(levelKeysArr[i], convertToNumber(LevelMap[levelKeysArr[i]]), levelKeysArr[(i + 1) % length]));
 }
 levelArr.push(EndScene);
+localStorage.setItem("turns", "[]");
 
 const config = {
   type: Phaser.AUTO,
