@@ -109,8 +109,8 @@ export const LevelMap = {
 }
 
 const convertMap = {
-  "OO": 99,
-  "XX": 100,
+  "OO": 10,
+  "XX": 6,
   "B1": 1,
   "B2": 2,
   "B3": 3,

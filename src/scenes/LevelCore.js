@@ -38,7 +38,7 @@ export default class LevelCore extends Phaser.Scene {
   }
 
   preload() {
-    this.load.spritesheet('tiles', 'assets/Sokoban.png', {
+    this.load.spritesheet('tiles', 'assets/Sokoban2.png', {
       frameWidth: 128,
       startFrame: 0,
     });
@@ -69,30 +69,32 @@ export default class LevelCore extends Phaser.Scene {
       fontSize: '3rem',
       fontStyle: 'bold',
       fontFamily: 'GoogleSans',
-    });
+    }).setColor('black').setBackgroundColor('white');
+
     timeText = this.add
       .text(350, 32, `Time: ${this.timeToFinishLevel}`, {
         fontFamily: 'GoogleSans, serif',
         fontStyle: 'bold'
       }, 2, 1, 0)
       .setFontSize(48)
+      .setColor('black').setBackgroundColor('white');
 
-    let restartLevelText = this.add
+    this.add
       .text(950, 1100, 'Reset level', {
         fontFamily: 'GoogleSans, serif',
         fontStyle: 'bold'
       }, 2, 1, 0)
       .setFontSize(30)
-      .setColor('red')
+      .setColor('red').setBackgroundColor('white')
       .setInteractive()
       .once('pointerdown', this.restartLevel, this);
-    let endGameText = this.add
+    this.add
       .text(750, 1100, 'End game', {
         fontFamily: 'GoogleSans, serif',
         fontStyle: 'bold'
       }, 2, 1, 0)
       .setFontSize(30)
-      .setColor('red')
+      .setColor('red').setBackgroundColor('white')
       .setInteractive()
       .once('pointerdown', this.endGame, this);
   }
@@ -156,7 +158,6 @@ export default class LevelCore extends Phaser.Scene {
 
 
     if (this.allTargetCovered()) {
-      end = Date.now() / 1000 + 5 * this.reload;
       this.registry.set('time', this.registry.get('time') + this.timeToFinishLevel);
       this.registry.set('level', this.key);
       if (this.key === 'Level10') {
