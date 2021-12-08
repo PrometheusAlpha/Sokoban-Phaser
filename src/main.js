@@ -14,6 +14,7 @@ const scenes = [Start, Narration, NameInput, Help, EndScene];
 const length = levelKeysArr.length;
 localStorage.setItem("turns", "[]");
 
+
 for (let i = 0; i < length; i++) {
   scenes.push(new LevelCore(levelKeysArr[i], convertToNumber(LevelMap[levelKeysArr[i]]), levelKeysArr[(i + 1) % length]));
 }

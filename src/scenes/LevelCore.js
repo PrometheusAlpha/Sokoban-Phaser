@@ -5,8 +5,8 @@ let NoOfTargetsCoveredGroupByColor = {};
 let boxesByColor = {};
 
 let movesCount;
-let movesCountLabel;
-let start, end;
+let movesCountLabel, timeText;
+let start = -1;
 
 import * as Colors from '../consts/Color.js'
 import {
@@ -28,12 +28,13 @@ export default class LevelCore extends Phaser.Scene {
     this.key = key;
     this.level = levelMap;
     this.nextLevel = nextLevel;
+    this.reload = 0;
+    this.currentTime = 0;
+    this.timeToFinishLevel = 0;
   }
 
   init() {
     movesCount = 0;
-    start = 0;
-    end = 0;
   }
 
   preload() {
@@ -69,6 +70,12 @@ export default class LevelCore extends Phaser.Scene {
       fontStyle: 'bold',
       fontFamily: 'GoogleSans',
     });
+    timeText = this.add
+      .text(350, 32, `Time: ${this.timeToFinishLevel}`, {
+        fontFamily: 'GoogleSans, serif',
+        fontStyle: 'bold'
+      }, 2, 1, 0)
+      .setFontSize(48)
 
     let restartLevelText = this.add
       .text(950, 1100, 'Reset level', {
@@ -138,16 +145,24 @@ export default class LevelCore extends Phaser.Scene {
       })
     }
 
-    if (movesCount == 1) {
+    if (start === -1 && movesCount === 0) {
       start = Date.now() / 1000;
     }
+    if (movesCount >= 1) {
+      this.currentTime = Date.now() / 1000;
+      this.timeToFinishLevel = Math.round((this.currentTime - start + 5 * this.reload) * 100) / 100;
+      timeText.text = `Time: ${this.timeToFinishLevel}`;
+    }
+
+
     if (this.allTargetCovered()) {
-      this.scene.start(this.nextLevel)
-      end = Date.now() / 1000;
-      this.registry.set('time', this.registry.get('time') + end - start);
+      end = Date.now() / 1000 + 5 * this.reload;
+      this.registry.set('time', this.registry.get('time') + this.timeToFinishLevel);
+      this.registry.set('level', this.key);
       if (this.key === 'Level10') {
         this.endGame();
       }
+      this.scene.start(this.nextLevel)
     }
   }
 
@@ -190,6 +205,7 @@ export default class LevelCore extends Phaser.Scene {
     })
 
   }
+
 
   // make player move and move the box as well
   tweenMove(direction, baseTween, onStart) {
@@ -246,20 +262,16 @@ export default class LevelCore extends Phaser.Scene {
       ))
     }
 
+    movesCount++,
+    this.updateMovesCount();
     this.tweens.add(Object.assign(
       baseTween, {
         targets: player,
-        onComplete: this.handlePlayerStopped,
+        onComplete: this.stopPlayerAnimation,
         onCompleteScope: this,
         onStart
       }
     ))
-  }
-
-  handlePlayerStopped() {
-    movesCount++,
-    this.stopPlayerAnimation(),
-      this.updateMovesCount();
   }
 
   updateMovesCount() {
@@ -398,39 +410,22 @@ export default class LevelCore extends Phaser.Scene {
   }
 
   restartLevel() {
-    end = Date.now() / 1000;
-    this.registry.set('time', this.registry.get('time') + end - start + 5);
+    this.reload++;
     this.events.off();
     this.scene.restart();
   }
 
   endGame() {
-    if (movesCount === 0) {
-      this.registry.set('level', this.key);
-      this.scene.start('EndScene');
-    } else {
-      end = Date.now() / 1000;
-      this.registry.set('time', this.registry.get('time') + end - start);
-      this.registry.set('level', this.key);
-      let time = this.registry.get('time');
-      let level = this.registry.get('level');
-      let name = this.registry.get('name');
-      let data = JSON.parse(localStorage.getItem('turns')) || [];
-      if (data === []) {
-        data = [{
-          name: name,
-          time: time,
-          level: level
-        }];
-      } else {
-        data.push({
-          name: name,
-          time: time,
-          level: level
-        });
-      }
-      localStorage.setItem('turns', JSON.stringify(data));
-      this.scene.start('EndScene');
-    }
+    let time = this.registry.get('time');
+    let level = this.registry.get('level') || "nolevel";
+    let name = this.registry.get('name');
+    let data = JSON.parse(localStorage.getItem('turns')) || [];
+    data.push({
+      name: name,
+      time: time,
+      level: level
+    });
+    localStorage.setItem('turns', JSON.stringify(data));
+    this.scene.start('EndScene');
   }
 }
