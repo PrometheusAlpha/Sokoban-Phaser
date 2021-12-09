@@ -45,8 +45,7 @@ export default class EndScene extends Phaser.Scene {
     let n;
     if (data.length <= 5) {
       n = data.length
-    }
-    else n = 5
+    } else n = 5
     for (let i = 0; i < n; i++) {
       this.add.text(
         250,
@@ -80,7 +79,7 @@ export default class EndScene extends Phaser.Scene {
       );
     }
     let start = this.add
-      .text(this.cameras.main.width / 2 - 200, this.cameras.main.height / 2 - 300, 'RESTART', {
+      .text(this.cameras.main.width / 2 - 200, this.cameras.main.height / 2 + 300, 'RESTART', {
         fontFamily: 'GoogleSans'
       }, 2, 1, 0)
       .setFontSize(100)
