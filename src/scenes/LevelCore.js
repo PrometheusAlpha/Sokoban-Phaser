@@ -4,8 +4,8 @@ let layer;
 let NoOfTargetsCoveredGroupByColor = {};
 let boxesByColor = {};
 
-let movesCount;
-let movesCountLabel, timeText;
+let movesCount = 0;
+let timeText;
 let start = -1;
 
 import * as Colors from '../consts/Color.js'
@@ -28,14 +28,13 @@ export default class LevelCore extends Phaser.Scene {
     this.key = key;
     this.level = levelMap;
     this.nextLevel = nextLevel;
-    this.reload = 0;
+    this.hasReloaded = 0;
     this.currentTime = 0;
     this.timeToFinishLevel = 0;
+    this.bufferTime = 0;
   }
 
-  init() {
-    movesCount = 0;
-  }
+  init() {}
 
   preload() {
     this.load.spritesheet('tiles', 'assets/Sokoban2.png', {
@@ -65,14 +64,8 @@ export default class LevelCore extends Phaser.Scene {
     this.createPlayerAnims();
     this.extractBoxes(layer);
 
-    movesCountLabel = this.add.text(32, 32, `Moves: ${movesCount}`, {
-      fontSize: '3rem',
-      fontStyle: 'bold',
-      fontFamily: 'GoogleSans',
-    }).setColor('black').setBackgroundColor('white');
-
     timeText = this.add
-      .text(350, 32, `Time: ${this.timeToFinishLevel}`, {
+      .text(50, 32, `Time: ${this.timeToFinishLevel === 0 ? this.registry.get("time") : this.timeToFinishLevel}`, {
         fontFamily: 'GoogleSans, serif',
         fontStyle: 'bold'
       }, 2, 1, 0)
@@ -147,19 +140,23 @@ export default class LevelCore extends Phaser.Scene {
       })
     }
 
-    if (start === -1 && movesCount === 0) {
+    if (start === -1 && movesCount === 1) {
+      console.log(start);
       start = Date.now() / 1000;
     }
     if (movesCount >= 1) {
       this.currentTime = Date.now() / 1000;
-      this.timeToFinishLevel = Math.round((this.currentTime - start + 5 * this.reload) * 100) / 100;
+      this.timePassed = this.currentTime - start;
+      this.timeToFinishLevel = this.round((this.registry.get('time') + this.bufferTime + this.timePassed + 5 * this.hasReloaded));
       timeText.text = `Time: ${this.timeToFinishLevel}`;
     }
 
-
     if (this.allTargetCovered()) {
+      this.bufferTime = 0;
       this.registry.set('time', this.registry.get('time') + this.timeToFinishLevel);
       this.registry.set('level', this.key);
+      movesCount = 0;
+      start = -1;
       if (this.key === 'Level10') {
         this.endGame();
       }
@@ -263,8 +260,7 @@ export default class LevelCore extends Phaser.Scene {
       ))
     }
 
-    movesCount++,
-    this.updateMovesCount();
+    movesCount++
     this.tweens.add(Object.assign(
       baseTween, {
         targets: player,
@@ -273,13 +269,6 @@ export default class LevelCore extends Phaser.Scene {
         onStart
       }
     ))
-  }
-
-  updateMovesCount() {
-    if (!movesCountLabel) {
-      return;
-    }
-    movesCountLabel.text = `Moves: ${movesCount}`;
   }
 
   // used when player finishes moving
@@ -411,7 +400,12 @@ export default class LevelCore extends Phaser.Scene {
   }
 
   restartLevel() {
-    this.reload++;
+    if (this.hasReloaded === 0) {
+      this.hasReloaded = 1;
+    }
+    movesCount = 0;
+    start = -1;
+    this.bufferTime = this.timeToFinishLevel;
     this.events.off();
     this.scene.restart();
   }
@@ -428,5 +422,9 @@ export default class LevelCore extends Phaser.Scene {
     });
     localStorage.setItem('turns', JSON.stringify(data));
     this.scene.start('EndScene');
+  }
+
+  round(num) {
+    return Math.round(num * 100) / 100;
   }
 }
