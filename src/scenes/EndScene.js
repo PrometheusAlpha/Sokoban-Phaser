@@ -11,7 +11,7 @@ export default class EndScene extends Phaser.Scene {
       if (a.level === b.level) return a.time - b.time;
       return a.level > b.level;
     })
-    console.log(data)
+    // console.log(data)
     this.add.text(
       250,
       400 + -1 * 50,
@@ -94,6 +94,6 @@ export default class EndScene extends Phaser.Scene {
   }
 
   startGame() {
-    this.scene.start('NameInput');
+    this.scene.start('Start');
   }
 }

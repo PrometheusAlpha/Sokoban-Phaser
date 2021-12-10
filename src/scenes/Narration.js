@@ -10,7 +10,6 @@ export default class Narration extends Phaser.Scene {
     super({
       key: 'Narration'
     });
-    this.i = 0;
     this.count = 0;
   }
 
@@ -19,6 +18,9 @@ export default class Narration extends Phaser.Scene {
   }
 
   create() {
+
+    this.i = 0;
+
     let vid = this.add.video(575, 300, 'bg');
     vid.play(true);
 

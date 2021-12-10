@@ -12,7 +12,9 @@ import {
 const levelKeysArr = Object.keys(LevelMap);
 const scenes = [Start, Narration, NameInput, Help, EndScene];
 const length = levelKeysArr.length;
-localStorage.setItem("turns", "[]");
+if (localStorage.getItem("turns") === null) {
+  localStorage.setItem("turns", "[]");
+}
 
 
 for (let i = 0; i < length; i++) {
