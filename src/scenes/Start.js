@@ -10,14 +10,14 @@ export default class Start extends Phaser.Scene {
   create() {
     this.add.image(576, 576, 'bg');
     let start = this.add
-      .text(this.cameras.main.width / 2 - 140, this.cameras.main.height / 2, 'START', {
+      .text(this.cameras.main.width / 2 - 140, this.cameras.main.height / 2 + 100, 'START', {
         fontFamily: 'GoogleSans'
       }, 2, 1, 0)
       .setFontSize(100)
       .setInteractive()
       .once('pointerdown', this.startGame, this);
     let help = this.add
-      .text(this.cameras.main.width / 2 - 120, this.cameras.main.height / 2 + 100, 'HELP', {
+      .text(this.cameras.main.width / 2 - 120, this.cameras.main.height / 2 + 200, 'HELP', {
         fontFamily: 'GoogleSans'
       }, 2, 1, 0)
       .setFontSize(100)
