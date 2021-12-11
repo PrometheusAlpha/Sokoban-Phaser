@@ -314,7 +314,7 @@ export default class LevelCore extends Phaser.Scene {
     if (!layer) return false
     const tile = layer.getTileAtWorldXY(x, y)
     if (!tile) return false
-    return tile.index === 100 || tile.index === 99
+    return tile.index === 10 || tile.index === 6
   }
 
   // check the target in tileIndex
