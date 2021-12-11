@@ -141,9 +141,9 @@ export default class LevelCore extends Phaser.Scene {
     }
 
     if (start === -1 && movesCount === 1) {
-      console.log(start);
       start = Date.now() / 1000;
     }
+    
     if (movesCount >= 1) {
       this.currentTime = Date.now() / 1000;
       this.timePassed = this.currentTime - start;
@@ -204,8 +204,6 @@ export default class LevelCore extends Phaser.Scene {
 
   }
 
-
-  // make player move and move the box as well
   tweenMove(direction, baseTween, onStart) {
     if (this.tweens.isTweening(player)) {
       return
@@ -271,7 +269,6 @@ export default class LevelCore extends Phaser.Scene {
     ))
   }
 
-  // used when player finishes moving
   stopPlayerAnimation() {
     if (!player) {
       return
@@ -290,7 +287,6 @@ export default class LevelCore extends Phaser.Scene {
     NoOfTargetsCoveredGroupByColor[color] += change
   }
 
-  // check if the box is in position (x, y)
   getBoxDataAt(x, y) {
     const keys = Object.keys(boxesByColor)
     for (let i = 0; i < keys.length; ++i) {
@@ -309,7 +305,6 @@ export default class LevelCore extends Phaser.Scene {
     return undefined
   }
 
-  // check if the wall box is in position (x, y)
   hasWallAt(x, y) {
     if (!layer) return false
     const tile = layer.getTileAtWorldXY(x, y)
@@ -317,7 +312,6 @@ export default class LevelCore extends Phaser.Scene {
     return tile.index === 10 || tile.index === 6
   }
 
-  // check the target in tileIndex
   hasTargetAt(x, y, tileIndex) {
     if (!layer) return false
     const tile = layer.getTileAtWorldXY(x, y)
